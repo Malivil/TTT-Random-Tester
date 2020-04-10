@@ -4,6 +4,7 @@ local faketesterenabled = CreateConVar("ttt_faketester_enabled", 1, {
 if not faketesterenabled:GetBool() then return end
 if SERVER then
     AddCSLuaFile()
+    AddCSLuaFile("shared.lua")
     util.AddNetworkString("ft result")
     util.AddNetworkString("ft failed")
     resource.AddFile("materials/VGUI/ttt/icon_randomtest.vmt")
@@ -70,9 +71,10 @@ end
 
 local function GetFakeTesterPlayer()
     local result = {}
-    for k, v in pairs(player.GetAll()) do
-        if v:IsTerror() and (v:GetTraitor() or v:GetRole() == ROLE_INNOCENT) and
-            not v:GetNWBool("RTTested") then table.insert(result, v) end
+    for _, v in pairs(player.GetAll()) do
+        if v:IsTerror() and not v:GetNWBool("RTTested") then
+            table.insert(result, v)
+        end
     end
     return result[math.random(1, #result)]
 end
@@ -170,8 +172,7 @@ local function PrintFakeCenteredText(txt, delay, color)
 end
 
 local function GetFakeRoleColor(role, ply)
-    return not (IsValid(ply) and ply:IsTerror()) and COLOR_ORANGE or
-               (role == ROLE_TRAITOR) and COLOR_RED or COLOR_GREEN
+    return not (IsValid(ply) and ply:IsTerror()) and COLOR_ORANGE or ROLE_COLORS[role]
 end
 
 if CLIENT then

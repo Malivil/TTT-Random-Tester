@@ -1,5 +1,6 @@
 if SERVER then
     AddCSLuaFile()
+    AddCSLuaFile("shared.lua")
     util.AddNetworkString("rt result")
     util.AddNetworkString("rt started")
     util.AddNetworkString("rt notify traitor")
@@ -77,9 +78,10 @@ end
 
 local function GetRandomTesterPlayer()
     local result = {}
-    for k, v in pairs(player.GetAll()) do
-        if v:IsTerror() and (v:GetTraitor() or v:GetRole() == ROLE_INNOCENT) and
-            not v:GetNWBool("RTTested") then table.insert(result, v) end
+    for _, v in pairs(player.GetAll()) do
+        if v:IsTerror() and not v:GetNWBool("RTTested") then
+            table.insert(result, v)
+        end
     end
     return result[math.random(1, #result)]
 end
@@ -115,8 +117,7 @@ function SWEP:HandleMessages(ply)
     timer.Create("RT Timer " .. id, self.Delay, 1, function()
         if GetRoundState() ~= ROUND_ACTIVE then return end
 
-        DamageLog("RTester:\t" .. ownerNick .. "[" .. owner:GetRoleString() ..
-                      "] tested " .. nick .. "[" .. rolestring .. "]")
+        DamageLog("RTester:\t" .. ownerNick .. "[" .. owner:GetRoleString() .. "] tested " .. nick .. "[" .. rolestring .. "]")
 
         local valid = IsValid(ply)
         role, nick = valid and ply:GetRole() or role,
@@ -171,8 +172,7 @@ local function PrintCenteredText(txt, delay, color)
 end
 
 local function GetRoleColor(role, ply)
-    return not (IsValid(ply) and ply:IsTerror()) and COLOR_ORANGE or
-               (role == ROLE_TRAITOR) and COLOR_RED or COLOR_GREEN
+    return not (IsValid(ply) and ply:IsTerror()) and COLOR_ORANGE or ROLE_COLORS[role]
 end
 
 if CLIENT then
