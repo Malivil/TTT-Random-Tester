@@ -1,0 +1,13 @@
+{
+  "title": "TTT Random Tester",
+  "type": "ServerContent",
+  "ignore": [
+    ".git*",
+    "*.iml",
+    ".idea*",
+    "*.psd",
+    "*.vcproj",
+    "*.svn*",
+    "LICENSE"
+  ]
+}
