@@ -81,6 +81,10 @@ end
 
 function SWEP:OnDrop() self:Remove() end
 
+local function IsTraitorTeam(ply)
+    return ply:IsTraitor() or ply:IsHypnotist() or ply:IsAssassin()
+end
+
 function SWEP:HandleMessages(ply)
     if not IsValid(ply) then
         net.Start("ft failed")
@@ -97,7 +101,7 @@ function SWEP:HandleMessages(ply)
 
     if timer.Exists("FT Timer" .. id) then return end
 
-    for key, v in pairs(player.GetAll()) do
+    for _, v in pairs(player.GetAll()) do
         if timer.Exists("RT Timer " .. v:EntIndex()) then
             self.Delay = timer.TimeLeft("RT Timer " .. v:EntIndex())
             timer.Remove("RT Timer " .. v:EntIndex())
@@ -112,7 +116,7 @@ function SWEP:HandleMessages(ply)
         role, nick = valid and ply:GetRole() or role,
                      valid and ply:Nick() or nick
 
-        if owner:IsTraitor() and ply:IsTraitor() then
+        if IsTraitorTeam(owner) and IsTraitorTeam(ply) then
             role = ROLE_INNOCENT
             rolestring = "innocent"
         else

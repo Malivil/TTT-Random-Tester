@@ -106,7 +106,7 @@ function SWEP:HandleMessages(ply)
     net.WriteUInt(self.Delay, 8)
     net.Broadcast()
 
-    if (role == ROLE_TRAITOR) then
+    if (role == ROLE_TRAITOR or role == ROLE_HYPNOTIST or role == ROLE_ASSASSIN) then
         net.Start("rt notify traitor")
         net.WriteUInt(txtDelay, 8)
         net.Send(ply)
