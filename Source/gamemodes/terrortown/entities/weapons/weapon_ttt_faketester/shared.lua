@@ -72,7 +72,7 @@ end
 local function GetFakeTesterPlayer()
     local result = {}
     for _, v in pairs(player.GetAll()) do
-        if v:IsTerror() and not v:GetNWBool("RTTested") then
+        if v:IsTerror() and v:GetRole() ~= ROLE_DETECTIVE and not v:GetNWBool("RTTested") then
             table.insert(result, v)
         end
     end
