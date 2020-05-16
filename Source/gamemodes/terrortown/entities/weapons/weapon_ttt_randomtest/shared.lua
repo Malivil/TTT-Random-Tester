@@ -78,7 +78,7 @@ end
 
 local function GetRandomTesterPlayer()
     local result = {}
-    for _, v in pairs(player.GetAll()) do
+    for _, v in RandomPairs(player.GetAll()) do
         if v:IsTerror() and v:GetRole() ~= ROLE_DETECTIVE and not v:GetNWBool("RTTested") then
             table.insert(result, v)
         end

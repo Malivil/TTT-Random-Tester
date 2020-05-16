@@ -71,7 +71,7 @@ end
 
 local function GetFakeTesterPlayer()
     local result = {}
-    for _, v in pairs(player.GetAll()) do
+    for _, v in RandomPairs(player.GetAll()) do
         if v:IsTerror() and v:GetRole() ~= ROLE_DETECTIVE and not v:GetNWBool("RTTested") then
             table.insert(result, v)
         end
@@ -101,7 +101,17 @@ function SWEP:HandleMessages(ply)
 
     if timer.Exists("FT Timer" .. id) then return end
 
+    local innocentroles = {}
+    local evilroles = {}
     for _, v in pairs(player.GetAll()) do
+        if v:GetRole() ~= ROLE_DETECTIVE then
+            if v:GetRole() == ROLE_TRAITOR or v:GetRole() == ROLE_HYPNOTIST or v:GetRole() == ROLE_ASSASSIN or
+                v:GetRole() == ROLE_KILLER or v:GetRole() == ROLE_VAMPIRE or v:GetRole() == ROLE_ZOMBIE then
+                table.insert(evilroles, v:GetRole())
+            else
+                table.insert(innocentroles, v:GetRole())
+            end
+        end
         if timer.Exists("RT Timer " .. v:EntIndex()) then
             self.Delay = timer.TimeLeft("RT Timer " .. v:EntIndex())
             timer.Remove("RT Timer " .. v:EntIndex())
@@ -117,12 +127,19 @@ function SWEP:HandleMessages(ply)
                      valid and ply:Nick() or nick
 
         if IsTraitorTeam(owner) and IsTraitorTeam(ply) then
-            role = ROLE_INNOCENT
-            rolestring = "innocent"
+            if table.Count(innocentroles) > 0 then
+                role = innocentroles[math.random(table.Count(innocentroles))]
+            else
+                role = ROLE_INNOCENT
+            end
         else
-            role = ROLE_TRAITOR
-            rolestring = "traitor"
+            if table.Count(evilroles) > 0 then
+                role = evilroles[math.random(table.Count(evilroles))]
+            else
+                role = ROLE_TRAITOR
+            end
         end
+        rolestring = ROLE_STRINGS[role]
 
         DamageLog("FTester:\t" .. ownerNick .. "[" .. owner:GetRoleString() ..
                       "] fake tested " .. nick .. "[" .. rolestring .. "]")
