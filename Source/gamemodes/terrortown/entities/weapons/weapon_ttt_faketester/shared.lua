@@ -106,7 +106,7 @@ function SWEP:HandleMessages(ply)
     for _, v in pairs(player.GetAll()) do
         if v:GetRole() ~= ROLE_DETECTIVE then
             if v:GetRole() == ROLE_TRAITOR or v:GetRole() == ROLE_HYPNOTIST or v:GetRole() == ROLE_ASSASSIN or
-                v:GetRole() == ROLE_KILLER or v:GetRole() == ROLE_VAMPIRE or v:GetRole() == ROLE_ZOMBIE then
+                v:GetRole() == ROLE_KILLER or v:GetRole() == ROLE_VAMPIRE or v:GetRole() == ROLE_ZOMBIE or v:GetRole() == ROLE_DETRAITOR then
                 table.insert(evilroles, v:GetRole())
             else
                 table.insert(innocentroles, v:GetRole())

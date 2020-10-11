@@ -66,6 +66,17 @@ local Randomtestdelay = CreateConVar("ttt_randomtest_duration", 30, {
 SWEP.Delay = Randomtestdelay:GetInt()
 SWEP.TextDelay = 5
 
+ROLE_MERCENARY = ROLE_MERCENARY or ROLE_SURVIVALIST or -1
+ROLE_PHANTOM = ROLE_PHANTOM or ROLE_PHOENIX or -1
+ROLE_KILLER = ROLE_KILLER or ROLE_SERIALKILLER or -1
+ROLE_ZOMBIE = ROLE_ZOMBIE or ROLE_INFECTED or -1
+ROLE_SWAPPER = ROLE_SWAPPER or -1
+ROLE_GLITCH = ROLE_GLITCH or -1
+ROLE_HYPNOTIST = ROLE_HYPNOTIST or -1
+ROLE_ASSASSIN = ROLE_ASSASSIN or -1
+ROLE_DETRAITOR = ROLE_DETRAITOR or -1
+ROLE_VAMPIRE = ROLE_VAMPIRE or -1
+
 function SWEP:OnRemove()
     if CLIENT and IsValid(self.Owner) and self.Owner == LocalPlayer() and
         self.Owner:Alive() then RunConsoleCommand("lastinv") end
@@ -106,7 +117,7 @@ function SWEP:HandleMessages(ply)
     net.WriteUInt(self.Delay, 8)
     net.Broadcast()
 
-    if (role == ROLE_TRAITOR or role == ROLE_HYPNOTIST or role == ROLE_ASSASSIN) then
+    if (role == ROLE_TRAITOR or role == ROLE_HYPNOTIST or role == ROLE_ASSASSIN or role == ROLE_DETRAITOR or (GetGlobalBool("ttt_monsters_are_traitors", false) and (role == ROLE_ZOMBIE or role == ROLE_VAMPIRE))) then
         net.Start("rt notify traitor")
         net.WriteUInt(txtDelay, 8)
         net.Send(ply)
